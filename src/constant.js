@@ -20,7 +20,7 @@ export const CodeMap = new Map([
   ["1", "Claim is out of warranty period"],
   ["2", "Mileage out of range"],
   ["3", "Material cost lower"],
-  ["4", "Errorenous Record"],
+  ["4", "Erroneous Record"],
 ]);
 
 export const StatusMap = new Map([
