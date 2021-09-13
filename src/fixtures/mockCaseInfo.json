@@ -1,0 +1,14 @@
+{
+  "data": {
+    "VIN": "2FMPK4J93HBC66809",
+    "Mileage": "10359",
+    "MaterialCost": "0.0",
+    "WarrantyStartDate": "1970-01-01",
+    "RepairDate": "1970-01-01",
+    "CountryRepaired": "USA",
+    "RuleCode": "4.0",
+    "TechnicianComment": "TEST DROVE VEHICLE USED ELECTRONIC CHASSIS EARS TO DIAGNOSE CLUNK NOISE FROM REAR OF VEHICLE ALSO TEST DROVE VEHICEL WITH CUSTOMER AND SHOP FOREMAN UNABLE TO VERIFY CUSTOMERS CONCERN AT THIS TIME",
+    "AI-Suggestion": "0",
+    "AI-DisputeComment": "Testing Feedback comment"
+  }
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "date": "Sep 13",
+    "startTime": "6:15 PM",
+    "endTime": "",
+    "hours": ""
+  },
+  {
+    "date": "Sep 13",
+    "startTime": "4:05 PM",
+    "endTime": "4:55 PM",
+    "hours": "50 mins"
+  },
+  {
+    "date": "Sep 12",
+    "startTime": "11:50 PM",
+    "endTime": "12:15 AM",
+    "hours": "25 mins"
+  },
+  {
+    "date": "Sep 12",
+    "startTime": "10:05 PM",
+    "endTime": "10:40 PM",
+    "hours": "35 mins"
+  },
+  {
+    "date": "Sep 12",
+    "startTime": "02:00 PM",
+    "endTime": "02:50 PM",
+    "hours": "50 mins"
+  },
+  {
+    "date": "Sep 11",
+    "startTime": "10:00PM",
+    "endTime": "12:00AM",
+    "hours": "120 mins"
+  }
+]

@@ -1,0 +1,24 @@
+{
+  "data": [
+    {
+      "id": "8ee7fdc0e6cb9b418c14ac6c398176e2aee2305f",
+      "RuleCode": "0"
+    },
+    {
+      "id": "ecb84a866a26fc3c823e42321b5713593f67d47d",
+      "RuleCode": "2"
+    },
+    {
+      "id": "e6c9ed4b195e89ba95d7a16e37e6b3c65bbb25bb",
+      "RuleCode": "3"
+    },
+    {
+      "id": "4e371e3c2c66d038fb722216e535242b6f925670",
+      "RuleCode": "2"
+    },
+    {
+      "id": "dd9d8fd3b2b8a2b9ef14f720f0addb70e46b7a78",
+      "RuleCode": "3"
+    }
+  ]
+}
