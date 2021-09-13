@@ -1,9 +1,15 @@
 [
   {
-    "date": "Sep 13",
-    "startTime": "6:15 PM",
+    "date": "Sep 14",
+    "startTime": "",
     "endTime": "",
     "hours": ""
+  },
+  {
+    "date": "Sep 13",
+    "startTime": "6:15 PM",
+    "endTime": "7:05 PM",
+    "hours": "50 mins"
   },
   {
     "date": "Sep 13",
