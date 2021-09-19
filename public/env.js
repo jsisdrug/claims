@@ -1,3 +1,3 @@
 window.config = {
-  basePath: "http://localhost:8000/"
+  basePath: "http://10.216.27.47:8000/"
 }

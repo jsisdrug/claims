@@ -1,14 +1,14 @@
 export const URL = {
-  startApp: "startapp",
-  sendFilePath: "sendfilepath",
-  getRuleBased: "getrulebased",
-  getCaseInfo: "getcaseinfo",
+  startApp: "",
+  sendFilePath: "GET_FILEPATH",
+  getRuleBased: "GET_RULEFILTERS",
+  getCaseInfo: "GET_CASEINFO",
   sendCaseResult: "sendcaseresult",
   patchCaseInfo: "patchcaseinfo",
 };
 
 export const DATA = {
-  concurrencyLimit: 5,
+  concurrencyLimit: 1,
 };
 
 export const STYLE = {
@@ -24,13 +24,13 @@ export const CodeMap = new Map([
 ]);
 
 export const StatusMap = new Map([
-  ["0", "Dispute"],
-  ["1", "Accept"],
+  ["0", "Accept"],
+  ["1", "Dispute"],
 ]);
 
 export const TEXT = {
-  brandName: "Nilan AI Claims",
-  splash: "Initializing Nilan AI",
+  brandName: "Warranty AI Claims",
+  splash: "Initializing Warranty Claims",
 
   inputForm: {
     title: "Enter file path",

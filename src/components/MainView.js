@@ -138,7 +138,7 @@ class MainView extends Component {
     this.setState({ isLoading: true }, async () => {
       const uniqueIds = (await sendFilePath(this.state.filePath)).data
         .ClaimKeys;
-      const ruleBasedClaims = (await getRuleBasedCases()).data;
+      const ruleBasedClaims = (await getRuleBasedCases()).data.data;
       const aiBasedClaims = uniqueIds
         .filter((id) => !ruleBasedClaims.some((claim) => claim.id === id))
         .map((id) => ({ id, isLoading: true }));
@@ -373,22 +373,22 @@ class MainView extends Component {
 
               <Box textAlign="center" style={{ marginBottom: "60px" }}>
                 <Button
-                  variant={selectedCase.status !== 0 ? "outlined" : "contained"}
-                  color="secondary"
-                  onClick={() => this.onUpdateStatus(selectedCase, 0)}
-                  className={classes.button}
-                >
-                  {selectedCase.status === 0
-                    ? constant.TEXT.panelBtn4
-                    : constant.TEXT.panelBtn2}
-                </Button>
-                <Button
                   variant={selectedCase.status !== 1 ? "outlined" : "contained"}
-                  color="primary"
+                  color="secondary"
                   onClick={() => this.onUpdateStatus(selectedCase, 1)}
                   className={classes.button}
                 >
                   {selectedCase.status === 1
+                    ? constant.TEXT.panelBtn4
+                    : constant.TEXT.panelBtn2}
+                </Button>
+                <Button
+                  variant={selectedCase.status !== 0 ? "outlined" : "contained"}
+                  color="primary"
+                  onClick={() => this.onUpdateStatus(selectedCase, 0)}
+                  className={classes.button}
+                >
+                  {selectedCase.status === 0
                     ? constant.TEXT.panelBtn3
                     : constant.TEXT.panelBtn1}
                 </Button>
