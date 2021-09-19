@@ -104,9 +104,15 @@ export const AIBased = (props) => {
           {constant.TEXT[col.name]}
           {col.sort !== true &&
             (col.sort === "asc" ? (
-              <ArrowUpward fontSize="small" />
+              <ArrowUpward
+                fontSize="small"
+                style={{ verticalAlign: "middle" }}
+              />
             ) : (
-              <ArrowDownward fontSize="small" />
+              <ArrowDownward
+                fontSize="small"
+                style={{ verticalAlign: "middle" }}
+              />
             ))}
         </TableCell>
       );
