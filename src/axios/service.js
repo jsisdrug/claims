@@ -43,9 +43,9 @@ export const getRuleBasedCases = () => {
  * @param {string} id case identifier
  * @returns Promise<caseInfo> Details of the case
  */
-export const getCaseInfo = (id) => {
+export const getCaseInfo = (ids) => {
   const url = BASE_PATH + URL.getCaseInfo;
-  const request = { UserInput: id };
+  const request = { UserInput: ids };
   return shouldMockResponse
     ? mockRespond("getCaseInfo")
     : AxiosInstance.post(url, request);

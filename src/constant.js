@@ -28,6 +28,41 @@ export const StatusMap = new Map([
   ["1", "Dispute"],
 ]);
 
+export const FieldNameMap = new Map([
+  ["uniqueId", "id"],
+  ["vin", "VIN"],
+  ["mileage", "Mileage"],
+  ["cost", "MaterialCost"],
+  ["startDate", "WarrantyStartDate"],
+  ["repairDate", "RepairDate"],
+  ["countryRepaired", "CountryRepaired"],
+  ["technicianComment", "TechnicianComment"],
+  ["AISuggestion", "AI-Suggestion"],
+  ["AIDisputeComment", "AI-DisputeComment"],
+  ["comment", "comment"],
+  ["status", "status"],
+  ["action", ""],
+])
+
+function createColumn(name, order, width, sort, show) {
+  return { name, order, width, sort, show };
+}
+
+export const columns = [
+  createColumn("uniqueId", 1, "100px", false, false),
+  createColumn("vin", 2, "100px", false, true),
+  createColumn("mileage", 3, "100px", true, true),
+  createColumn("cost", 4, "100px", true, true),
+  createColumn("startDate", 5, "150px", false, false),
+  createColumn("repairDate", 6, "150px", false, false),
+  createColumn("countryRepaired", 7, "100px", false, false),
+  createColumn("technicianComment", 8, "400px", false, false),
+  createColumn("AISuggestion", 9, "100px", false, true),
+  createColumn("AIDisputeComment", 10, "100px", false, true),
+  createColumn("comment", 11, "200px", false, true),
+  createColumn("action", 12, "100px", false, true),
+];
+
 export const TEXT = {
   brandName: "Warranty AI Claims",
   splash: "Initializing Warranty Claims",

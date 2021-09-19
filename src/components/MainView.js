@@ -2,18 +2,14 @@ import {
   Box,
   Button,
   CircularProgress,
-  Divider,
-  Drawer,
   Grid,
-  List,
-  ListItem,
-  ListItemText,
+  Menu,
+  MenuItem,
   Tab,
   Tabs,
-  TextField,
-  Typography,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import DoneIcon from "@material-ui/icons/Done";
 import clsx from "clsx";
 import React, { Component } from "react";
 import {
@@ -39,6 +35,10 @@ const styles = (theme) => ({
     marginLeft: 0,
     height: `calc(100vh - 64px)`,
     display: "flex",
+    overflow: "auto",
+  },
+  restrictedHeight: {
+    height: `calc(100vh - 165px)`,
     overflow: "auto",
   },
   contentShiftRight: {
@@ -71,34 +71,27 @@ const styles = (theme) => ({
 class MainView extends Component {
   state = {
     isLoading: false,
-    selectedTab: "rule",
-    showRightPanel: false,
+    selectedTab: "ai",
     ruleBasedClaims: [],
     aiBasedClaims: [],
-    selectedCase: null,
-    caseList: [
-      // {
-      //   id: "48d18a8c3709fdfc4dc5f5603fcbef006c791274",
-      //   VIN: "2FMPK4J93HBC66809",
-      //   Mileage: "10359",
-      //   MaterialCost: "0.0",
-      //   WarrantyStartDate: "1970-01-01",
-      //   RepairDate: "1970-01-01",
-      //   CountryRepaired: "USA",
-      //   RuleCode: "4.0",
-      //   TechnicianComment:
-      //     "TEST DROVE VEHICLE USED ELECTRONIC CHASSIS EARS TO DIAGNOSE CLUNK NOISE FROM REAR OF VEHICLE ALSO TEST DROVE VEHICEL WITH CUSTOMER AND SHOP FOREMAN UNABLE TO VERIFY CUSTOMERS CONCERN AT THIS TIME",
-      //   "AI-Suggestion": "0",
-      //   "AI-DisputeComment": "Testing Feedback comment",
-      // },
-    ],
+    filePath: "",
+    anchorEl: null,
+    columns: constant.columns,
   };
 
   componentDidMount() {
-    // this.onSubmit();
+    this.onSubmit();
   }
 
   loadAIBasedClaims = () => {
+    const ids = this.state.aiBasedClaims.map((claim) => claim.id);
+    getCaseInfo(ids).then((response) => {
+      this.setState({
+        aiBasedClaims: response.data.map((cl) => ({ ...cl, status: "Nil" })),
+      });
+    });
+  };
+  _loadAIBasedClaims = () => {
     const chunks = getChunks(
       [...this.state.aiBasedClaims],
       constant.DATA.concurrencyLimit
@@ -117,7 +110,7 @@ class MainView extends Component {
     });
   };
 
-  makeParallelCalls = (claims) => {
+  _makeParallelCalls = (claims) => {
     let promises = [];
     promises = claims.map((claim) => {
       return getCaseInfo(claim.id).then((response) => {
@@ -176,23 +169,12 @@ class MainView extends Component {
     });
   };
 
-  onTakeAction = (claim) => {
-    this.setState({
-      selectedCase: claim,
-      showRightPanel: true,
-    });
-  };
-
-  closeRightPanel = () => {
-    this.setState({ showRightPanel: false });
-  };
-
   saveAll = () => {
     const payload = this.state.aiBasedClaims.map((claim) => {
       return {
         id: claim.id,
         expertComment: claim.comment ? claim.comment : "No comments added",
-        finalStatus: claim.status === 0 || claim.status === 1 ? claim.status : "Nil",
+        finalStatus: claim.status,
       };
     });
     console.log(payload);
@@ -207,18 +189,40 @@ class MainView extends Component {
     });
   };
 
+  onToggleColumn = (col, e) => {
+    e.stopPropagation();
+    this.setState({
+      columns: this.state.columns.map((cl) => {
+        return cl.name === col.name ? { ...cl, show: !cl.show } : cl;
+      }),
+    });
+  };
+
+  onToggleSort = (col) => {
+    const sortField = constant.FieldNameMap.get(col.name);
+    const sort =
+      col.sort === true ? "asc" : col.sort === "asc" ? "desc" : "asc";
+    this.setState({
+      columns: this.state.columns.map((cl) => {
+        return cl.name === col.name
+          ? { ...cl, sort }
+          : { ...cl, sort: cl.sort !== false ? true : false };
+      }),
+      aiBasedClaims: [
+        ...this.state.aiBasedClaims.sort((a, b) => {
+          return sort === "asc"
+            ? a[sortField] - b[sortField]
+            : b[sortField] - a[sortField];
+        }),
+      ],
+    });
+  };
+
   render() {
     const { classes } = this.props;
-    const {
-      aiBasedClaims,
-      ruleBasedClaims,
-      selectedCase,
-      isLoading,
-      selectedTab,
-    } = this.state;
-    const mainClass = clsx(classes.content, {
-      [classes.contentShiftRight]: this.state.showRightPanel,
-    });
+    const { aiBasedClaims, ruleBasedClaims, isLoading, selectedTab } =
+      this.state;
+    const mainClass = clsx(classes.content);
     const hasClaims = aiBasedClaims.length > 0 || ruleBasedClaims.length > 0;
     const claims = selectedTab === "rule" ? ruleBasedClaims : aiBasedClaims;
     return (
@@ -234,9 +238,9 @@ class MainView extends Component {
             onSubmit={this.onSubmit}
           />
         ) : (
-          <Box>
+          <Box width="100%" maxWidth="100%">
             <Box component="section" marginBottom="20px">
-              <Grid justify="space-between" width="100%" container>
+              <Grid justify="space-between" container>
                 <Grid item>
                   <Tabs
                     value={selectedTab}
@@ -250,6 +254,37 @@ class MainView extends Component {
                 </Grid>
                 {selectedTab === "ai" && (
                   <Grid item>
+                    <Button
+                      aria-controls="simple-menu"
+                      aria-haspopup="true"
+                      onClick={(e) =>
+                        this.setState({ anchorEl: e.currentTarget })
+                      }
+                      style={{ marginRight: "10px" }}
+                    >
+                      Toggle Columns
+                    </Button>
+                    <Menu
+                      id="simple-menu"
+                      anchorEl={this.state.anchorEl}
+                      keepMounted
+                      open={Boolean(this.state.anchorEl)}
+                      onClick={(e) => this.setState({ anchorEl: null })}
+                    >
+                      {this.state.columns.map((col) => {
+                        return (
+                          <MenuItem
+                            key={col.name}
+                            style={{ justifyContent: "space-between" }}
+                            onClick={(e) => this.onToggleColumn(col, e)}
+                            divider
+                          >
+                            {constant.TEXT[col.name]}
+                            {col.show && <DoneIcon />}
+                          </MenuItem>
+                        );
+                      })}
+                    </Menu>
                     <Button
                       variant="contained"
                       color="primary"
@@ -267,134 +302,16 @@ class MainView extends Component {
                 <RuleBased claims={claims} classes={classes} />
               ) : (
                 <AIBased
+                  columns={this.state.columns}
                   claims={claims}
                   classes={classes}
-                  onAction={this.onTakeAction}
+                  onAddComment={this.onAddComment}
+                  onStatusChange={this.onUpdateStatus}
+                  onToggleSort={this.onToggleSort}
                 />
               )}
             </Box>
           </Box>
-        )}
-
-        {this.state.showRightPanel && (
-          <Drawer
-            anchor="right"
-            open={!!this.state.showRightPanel}
-            onClose={this.closeRightPanel}
-            transitionDuration={{ enter: 300, exit: 300 }}
-            classes={{
-              paper: clsx(classes.rightPanel),
-            }}
-          >
-            <Box p={1}>
-              <Typography variant="h5">{constant.TEXT.panelTitle}</Typography>
-              <Divider />
-
-              <List>
-                <ListItem>
-                  <ListItemText
-                    primary={constant.TEXT.uniqueId}
-                    secondary={selectedCase.id}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary={constant.TEXT.vin}
-                    secondary={selectedCase.VIN}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary={constant.TEXT.mileage}
-                    secondary={selectedCase.Mileage}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary={constant.TEXT.cost}
-                    secondary={selectedCase.MaterialCost}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary={constant.TEXT.startDate}
-                    secondary={selectedCase.WarrantyStartDate}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary={constant.TEXT.repairDate}
-                    secondary={selectedCase.RepairDate}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary={constant.TEXT.countryRepaired}
-                    secondary={selectedCase.CountryRepaired}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary={constant.TEXT.technicianComment}
-                    secondary={selectedCase.TechnicianComment}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary={constant.TEXT.AISuggestion}
-                    secondary={constant.StatusMap.get(
-                      selectedCase["AI-Suggestion"]
-                    )}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary={constant.TEXT.AIDisputeComment}
-                    secondary={selectedCase["AI-DisputeComment"]}
-                  />
-                </ListItem>
-              </List>
-
-              <Divider />
-
-              <TextField
-                id="filled-textarea"
-                label={constant.TEXT.comment}
-                placeholder={constant.TEXT.commentPlaceholder}
-                multiline
-                variant="filled"
-                style={{
-                  marginTop: "20px",
-                  width: "100%",
-                }}
-                value={selectedCase.comment}
-                onChange={(e) => this.onAddComment(e, selectedCase)}
-              />
-
-              <Box textAlign="center" style={{ marginBottom: "60px" }}>
-                <Button
-                  variant={selectedCase.status !== 1 ? "outlined" : "contained"}
-                  color="secondary"
-                  onClick={() => this.onUpdateStatus(selectedCase, 1)}
-                  className={classes.button}
-                >
-                  {selectedCase.status === 1
-                    ? constant.TEXT.panelBtn4
-                    : constant.TEXT.panelBtn2}
-                </Button>
-                <Button
-                  variant={selectedCase.status !== 0 ? "outlined" : "contained"}
-                  color="primary"
-                  onClick={() => this.onUpdateStatus(selectedCase, 0)}
-                  className={classes.button}
-                >
-                  {selectedCase.status === 0
-                    ? constant.TEXT.panelBtn3
-                    : constant.TEXT.panelBtn1}
-                </Button>
-              </Box>
-            </Box>
-          </Drawer>
         )}
       </main>
     );

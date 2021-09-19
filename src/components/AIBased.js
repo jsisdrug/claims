@@ -1,6 +1,6 @@
 import {
   Button,
-  CircularProgress,
+  ButtonGroup,
   Paper,
   Table,
   TableBody,
@@ -8,60 +8,127 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
+  Tooltip,
 } from "@material-ui/core";
+import { ArrowDownward, ArrowUpward } from "@material-ui/icons";
+import CloseIcon from "@material-ui/icons/Close";
+import DoneIcon from "@material-ui/icons/Done";
 import React from "react";
 import * as constant from "../constant";
 
 export const AIBased = (props) => {
-  const { classes, claims, onAction } = props;
+  const {
+    classes,
+    claims,
+    onStatusChange,
+    onAddComment,
+    columns,
+    onToggleSort,
+  } = props;
+  const fitleredColumns = columns.filter((col) => col.show);
+
+  function getCell(col, claim) {
+    switch (col.name) {
+      case "comment":
+        return (
+          <TableCell style={{ minWidth: col.width }} key={col.name}>
+            <TextField
+              id={`filled-textarea-${col.name}`}
+              label={constant.TEXT.comment}
+              placeholder={constant.TEXT.commentPlaceholder}
+              multiline
+              variant="filled"
+              style={{
+                width: "100%",
+              }}
+              value={claim.comment}
+              onChange={(e) => onAddComment(e, claim)}
+            />
+          </TableCell>
+        );
+      case "action":
+        return (
+          <TableCell style={{ minWidth: col.width }} key={col.name}>
+            <ButtonGroup disableElevation>
+              <Button
+                color="secondary"
+                variant={claim.status === 1 ? "contained" : "outlined"}
+                onClick={() => onStatusChange(claim, 1)}
+              >
+                <Tooltip title="Dispute">
+                  <CloseIcon />
+                </Tooltip>
+              </Button>
+              <Button
+                variant={claim.status === "Nil" ? "contained" : "outlined"}
+                onClick={() => onStatusChange(claim, "Nil")}
+              >
+                Nil
+              </Button>
+              <Button
+                color="primary"
+                variant={claim.status === 0 ? "contained" : "outlined"}
+                onClick={() => onStatusChange(claim, 0)}
+              >
+                <Tooltip title="Accept">
+                  <DoneIcon />
+                </Tooltip>
+              </Button>
+            </ButtonGroup>
+          </TableCell>
+        );
+      case "AISuggestion":
+        return (
+          <TableCell style={{ minWidth: col.width }} key={col.name}>
+            {constant.StatusMap.get(claim["AI-Suggestion"])}
+          </TableCell>
+        );
+      default:
+        return (
+          <TableCell style={{ minWidth: col.width }} key={col.name}>
+            {claim[constant.FieldNameMap.get(col.name)]}
+          </TableCell>
+        );
+    }
+  }
+
+  function getTh(col) {
+    if (col.sort) {
+      return (
+        <TableCell
+          style={{ minWidth: col.width, cursor: "pointer" }}
+          key={col.name}
+          onClick={() => onToggleSort(col)}
+        >
+          {constant.TEXT[col.name]}
+          {col.sort !== true &&
+            (col.sort === "asc" ? (
+              <ArrowUpward fontSize="small" />
+            ) : (
+              <ArrowDownward fontSize="small" />
+            ))}
+        </TableCell>
+      );
+    } else {
+      return (
+        <TableCell style={{ minWidth: col.width }} key={col.name}>
+          {constant.TEXT[col.name]}
+        </TableCell>
+      );
+    }
+  }
+
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} className={classes.restrictedHeight}>
       <Table className={classes.table} size="small">
         <TableHead>
-          <TableRow>
-            <TableCell>{constant.TEXT.uniqueId}</TableCell>
-            <TableCell>{constant.TEXT.vin}</TableCell>
-            <TableCell>{constant.TEXT.mileage}</TableCell>
-            <TableCell>{constant.TEXT.cost}</TableCell>
-            <TableCell>{constant.TEXT.status}</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
+          <TableRow>{fitleredColumns.map((col) => getTh(col))}</TableRow>
         </TableHead>
         <TableBody>
           {claims.map((claim) => (
             <TableRow key={claim.id}>
-              <TableCell>{claim.id}</TableCell>
-              <TableCell>{claim.VIN}</TableCell>
-              <TableCell>{claim.Mileage}</TableCell>
-              <TableCell>
-                {claim.isLoading ? (
-                  <CircularProgress disableShrink />
-                ) : (
-                  claim.MaterialCost
-                )}
-              </TableCell>
-              <TableCell>
-                {claim.status !== undefined
-                  ? constant.StatusMap.get(claim.status.toString())
-                  : ""}
-              </TableCell>
-              <TableCell>
-                {!claim.isLoading && (
-                  <Button
-                    variant={
-                      claim.status === 0 || claim.status === 1
-                        ? "outlined"
-                        : "contained"
-                    }
-                    color="primary"
-                    onClick={() => onAction(claim)}
-                  >
-                    {claim.status === 0 || claim.status === 1
-                      ? constant.TEXT.modify
-                      : constant.TEXT.action}
-                  </Button>
-                )}
-              </TableCell>
+              {fitleredColumns.map((col) => getCell(col, claim))}
             </TableRow>
           ))}
         </TableBody>
