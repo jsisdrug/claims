@@ -15,6 +15,8 @@ export const STYLE = {
   drawerWidth: 380,
 };
 
+export const defaultTab = "rule"; // ai
+
 export const CodeMap = new Map([
   ["0", "VIN Number Mismatch"],
   ["1", "Claim is out of warranty period"],
@@ -50,14 +52,14 @@ function createColumn(name, order, width, sort, show) {
 
 export const columns = [
   createColumn("uniqueId", 1, "100px", false, false),
-  createColumn("vin", 2, "100px", false, true),
+  createColumn("vin", 2, "100px", true, true),
   createColumn("mileage", 3, "100px", true, true),
   createColumn("cost", 4, "100px", true, true),
   createColumn("startDate", 5, "150px", false, false),
   createColumn("repairDate", 6, "150px", false, false),
   createColumn("countryRepaired", 7, "100px", false, false),
   createColumn("technicianComment", 8, "400px", false, false),
-  createColumn("AISuggestion", 9, "100px", false, true),
+  createColumn("AISuggestion", 9, "100px", true, true),
   createColumn("AIDisputeComment", 10, "100px", false, true),
   createColumn("comment", 11, "200px", false, true),
   createColumn("action", 12, "100px", false, true),
@@ -104,4 +106,6 @@ export const TEXT = {
   panelBtn2: "Dispute",
   panelBtn3: "Accepted",
   panelBtn4: "Disputed",
+
+  toggleColumns: "Toggle Columns"
 };

@@ -62,7 +62,7 @@
       "CountryRepaired": "USA",
       "RuleCode": "4.0",
       "TechnicianComment": "TEST DROVE VEHICLE USED ELECTRONIC CHASSIS EARS TO DIAGNOSE CLUNK NOISE FROM REAR OF VEHICLE ALSO TEST DROVE VEHICEL WITH CUSTOMER AND SHOP FOREMAN UNABLE TO VERIFY CUSTOMERS CONCERN AT THIS TIME",
-      "AI-Suggestion": "0",
+      "AI-Suggestion": "1",
       "AI-DisputeComment": "Testing Feedback comment"
     },
     {
@@ -127,7 +127,7 @@
       "CountryRepaired": "USA",
       "RuleCode": "4.0",
       "TechnicianComment": "TEST DROVE VEHICLE USED ELECTRONIC CHASSIS EARS TO DIAGNOSE CLUNK NOISE FROM REAR OF VEHICLE ALSO TEST DROVE VEHICEL WITH CUSTOMER AND SHOP FOREMAN UNABLE TO VERIFY CUSTOMERS CONCERN AT THIS TIME",
-      "AI-Suggestion": "0",
+      "AI-Suggestion": "1",
       "AI-DisputeComment": "Testing Feedback comment"
     }
   ]

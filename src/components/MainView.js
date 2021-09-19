@@ -71,7 +71,7 @@ const styles = (theme) => ({
 class MainView extends Component {
   state = {
     isLoading: false,
-    selectedTab: "ai",
+    selectedTab: constant.defaultTab,
     ruleBasedClaims: [],
     aiBasedClaims: [],
     filePath: "",
@@ -79,9 +79,7 @@ class MainView extends Component {
     columns: constant.columns,
   };
 
-  componentDidMount() {
-    this.onSubmit();
-  }
+  componentDidMount() {}
 
   loadAIBasedClaims = () => {
     const ids = this.state.aiBasedClaims.map((claim) => claim.id);
@@ -262,7 +260,7 @@ class MainView extends Component {
                       }
                       style={{ marginRight: "10px" }}
                     >
-                      Toggle Columns
+                      {constant.TEXT.toggleColumns}
                     </Button>
                     <Menu
                       id="simple-menu"
